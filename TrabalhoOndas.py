@@ -17,7 +17,7 @@ K = 200
 N = 2000
 
 c = 3e8
-l = 10 ** 6
+comp = 10 ** 6
 u = 0.9 * c
 
 R = 0
@@ -65,22 +65,22 @@ else:
 
 RoS = ((Rs / Zo) - 1) / ((Rs / Zo) + 1)
 
-tfim = 10 * l / u
+tfim = 10 * comp / u
 
 vp = 1 / np.sqrt(L * C)
 
-t = l / u
-deltat = 10 * t / N
-deltaz = l / K
+t = comp / u
+dt = 10 * t / N
+dz = comp / K
 
-tt = l / (10 * u)
+tt = comp / (10 * u)
 
-nn = tt / deltat
+nn = tt / dt
 
-c1 = - (2 * deltat) / (deltat * deltaz * R + 2 * deltaz * L)
-c2 = (2 * L - deltat * R) / (2 * L + deltat * R)
-c3 = - (2 * deltat) / (deltat * deltaz * G + 2 * deltaz * C)
-c4 = (2 * C - deltat * G) / (2 * C + deltat * G)
+c1 = - (2 * dt) / (dt * dz * R + 2 * dz * L)
+c2 = (2 * L - dt * R) / (2 * L + dt * R)
+c3 = - (2 * dt) / (dt * dz * G + 2 * dz * C)
+c4 = (2 * C - dt * G) / (2 * C + dt * G)
 
 Vs = np.zeros(N)
 
@@ -102,12 +102,12 @@ print('\tR = {} Ohm/m\t L = {:.2e} H/m'.format(R, L))
 print('\tG = {} S/m\t C = {:.2e} F/m'.format(G, C))
 print('\tZo = {:.2f} Rs = {}'.format(Zo, Rs))
 print('\tRoS = {:.2f} RoL = {:.2f}'.format(RoS, RoL))
-print('\tComprimento da linha = {:.1f} km'.format(l / 1e3))
+print('\tComprimento da linha = {:.1f} km'.format(comp / 1e3))
 print('\tVelocidade de propagação = {:.1e} m/s'.format(u))
 print('\tTempo de ida = {:.2f} ms'.format(t * 1e3))
 print('\tTempo estacionário = {:.2f} ms'.format(tfim * 1e3))
-print('\tdt = {:.3f} ms'.format(deltat * 1e3))
-print('\tdz = {:.1f} km'.format(deltaz / 1e3))
+print('\tdt = {:.3f} ms'.format(dt * 1e3))
+print('\tdz = {:.1f} km'.format(dz / 1e3))
 print('\tt\' = {:.2f} ms'.format(tt * 1e3))
 print('\tC1 = {:.2f}'.format(c1))
 print('\tC2 = {:.2f}'.format(c2))
@@ -128,8 +128,8 @@ y1 = [0]
 y2 = [0]
 y3 = [0]
 y4 = [0]
-xii = [i * 1e3 * deltat for i in range(N)]
-xxii = [i * deltaz / 1e3 for i in range(K)]
+xii = [i * 1e3 * dt for i in range(N)]
+xxii = [i * dz / 1e3 for i in range(K)]
 
 #######################################################################################################################
 
@@ -211,9 +211,9 @@ fig.suptitle("$R_L = {} \Omega$ | $V(t) = {}$".format(Rl if Rl != "infinito" els
                                                       "2u(t)" if fim != 0 else r"u(t) − u(t-{:.2f})".format(tt * 1e3)))
 
 axs[0][0].plot(xii, y1)
-axs[0][0].set_title('Tensão em z = -{:.0f} km durante o tempo'.format(l / 1e3))
+axs[0][0].set_title('Tensão em z = -{:.0f} km durante o tempo'.format(comp / 1e3))
 axs[0][0].set_xlabel('t (ms)')
-axs[0][0].set_ylabel('v(-{:.0f},t) (V)'.format(l / 1e3))
+axs[0][0].set_ylabel('v(-{:.0f},t) (V)'.format(comp / 1e3))
 
 axs[1][0].plot(xii, y3)
 axs[1][0].set_title('Tensão em z = 0 km durante o tempo')
@@ -221,22 +221,22 @@ axs[1][0].set_xlabel('t (ms)')
 axs[1][0].set_ylabel('v(0,t) (V)')
 
 axs[2][0].plot(xxii, v[100])
-axs[2][0].set_title('Tensão ao longo da linha em t = {:.2f} ms'.format(100 * deltat * 1e3))
+axs[2][0].set_title('Tensão ao longo da linha em t = {:.2f} ms'.format(100 * dt * 1e3))
 axs[2][0].set_xlabel('z (km)')
-axs[2][0].set_ylabel('v(z,{:.2f}) (V)'.format(100 * deltat * 1e3))
+axs[2][0].set_ylabel('v(z,{:.2f}) (V)'.format(100 * dt * 1e3))
 
 axs[3][0].plot(xxii, v[1900])
-axs[3][0].set_title('Tensão ao longo da linha em t = {:.2f} ms'.format(1900 * deltat * 1e3))
+axs[3][0].set_title('Tensão ao longo da linha em t = {:.2f} ms'.format(1900 * dt * 1e3))
 axs[3][0].set_xlabel('z (km)')
-axs[3][0].set_ylabel('v(z,{:.2f}) (V)'.format(1900 * deltat * 1e3))
+axs[3][0].set_ylabel('v(z,{:.2f}) (V)'.format(1900 * dt * 1e3))
 
 for zz in range(4):
     axs[zz][0].set_ylim(v_ylim)
 
 axs[0][1].plot(xii, y2)
-axs[0][1].set_title('Corrente em z = -{:.0f} km durante o tempo'.format(l / 1e3))
+axs[0][1].set_title('Corrente em z = -{:.0f} km durante o tempo'.format(comp / 1e3))
 axs[0][1].set_xlabel('t (ms)')
-axs[0][1].set_ylabel('i(-{:.0f},t) (A)'.format(l / 1e3))
+axs[0][1].set_ylabel('i(-{:.0f},t) (A)'.format(comp / 1e3))
 
 axs[1][1].plot(xii, y4)
 axs[1][1].set_title('Corrente em z = 0 km durante o tempo')
@@ -244,14 +244,14 @@ axs[1][1].set_xlabel('t (ms)')
 axs[1][1].set_ylabel('i(0,t) (A)')
 
 axs[2][1].plot(xxii, i[100])
-axs[2][1].set_title('Corrente ao longo da linha em t = {:.2f} ms'.format(100 * deltat * 1e3))
+axs[2][1].set_title('Corrente ao longo da linha em t = {:.2f} ms'.format(100 * dt * 1e3))
 axs[2][1].set_xlabel('z (km)')
-axs[2][1].set_ylabel('i(z,{:.2f}) (A)'.format(100 * deltat * 1e3))
+axs[2][1].set_ylabel('i(z,{:.2f}) (A)'.format(100 * dt * 1e3))
 
 axs[3][1].plot(xxii, i[1900])
-axs[3][1].set_title('Corrente ao longo da linha em t = {:.2f} ms'.format(1900 * deltat * 1e3))
+axs[3][1].set_title('Corrente ao longo da linha em t = {:.2f} ms'.format(1900 * dt * 1e3))
 axs[3][1].set_xlabel('z (km)')
-axs[3][1].set_ylabel('i(z,{:.2f}) (A)'.format(1900 * deltat * 1e3))
+axs[3][1].set_ylabel('i(z,{:.2f}) (A)'.format(1900 * dt * 1e3))
 
 for zz in range(4):
     axs[zz][1].set_ylim(i_ylim)
@@ -270,7 +270,7 @@ def func(y):
     ydata2 = y[1]
     line.set_data(xdata, ydata)
     line2.set_data(xdata, ydata2)
-    title.set_text("$t = {:.2f} ms$".format(f * deltat * 1e3))
+    title.set_text("$t = {:.2f} ms$".format(f * dt * 1e3))
     f += 1
     return line, line2, title
 
@@ -286,8 +286,8 @@ def func_inicial():
     ax.set_ylim(v_ylim)
     ay.set_ylim(i_ylim)
 
-    ax.set_xlim(-5, (l / 1e3) + 5)
-    ay.set_xlim(-5, (l / 1e3) + 5)
+    ax.set_xlim(-5, (comp / 1e3) + 5)
+    ay.set_xlim(-5, (comp / 1e3) + 5)
     line.set_data(xdata, ydata)
     line2.set_data(xdata, ydata2)
 
@@ -324,7 +324,7 @@ ydata2 = []
 kk = zip(v, i)
 
 ani = FuncAnimation(fig, func, frames=kk, blit=True,
-                    interval=50, repeat=False, init_func=func_inicial)
+                    interval=20, repeat=False, init_func=func_inicial)
 
 plt.show()
 
